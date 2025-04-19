@@ -202,7 +202,7 @@ func (connection *Connection) Stop() {
 	//connection.playing = false
 }
 
-const googleDeveloperKey = "AIzaSyAZ01JvdUKpo2pKhQZ5syUYtj7entsUGgg"
+const googleDeveloperKey = ""
 
 func getUserVCID(s *discordgo.Session, guildID, userID string) (string, error) {
 	guild, err := s.State.Guild(guildID)
@@ -343,7 +343,7 @@ var ( //Список комманд и их описание( чисто что�
 				return
 			}
 
-			ff := exec.Command("C:\\Users\\vladislav\\Desktop\\downgradbot\\ffmpeg.exe",
+			ff := exec.Command("ffmpeg",
 				"-i", "pipe:0",
 				"-f", "s16le",
 				"-ar", strconv.Itoa(FRAME_RATE),
@@ -362,7 +362,7 @@ var ( //Список комманд и их описание( чисто что�
 					for sq.HasNext() {
 
 						currSong := sq.Next()
-						yt := exec.Command("C:\\Users\\vladislav\\Desktop\\downgradbot\\yt-dlp.exe",
+						yt := exec.Command("yt-dlp",
 							"-f",
 							"bestaudio",
 							"-o",
