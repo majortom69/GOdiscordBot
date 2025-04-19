@@ -14,4 +14,7 @@ go build main.go
 chmod +x ./main
 ./main
 ```
+Скриншот с примером использования
+![image](https://github.com/user-attachments/assets/0c4981d4-c397-417a-ad39-bc62059bc2ae)
+
   
