@@ -5,7 +5,7 @@
 - Поставить трек на пазуу
 
 ## Сборка проекта
-Для сборки и запуска проекта на системе  должны быть установелнны утилиты: [ffmpeg](https://github.com/FFmpeg/FFmpeg) и [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+Для запуска проекта на системе  должны быть установелнны утилиты: [ffmpeg](https://github.com/FFmpeg/FFmpeg) и [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 сборка и запуск(Linux)
 ```sh
