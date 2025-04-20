@@ -202,7 +202,7 @@ func (connection *Connection) Stop() {
 	//connection.playing = false
 }
 
-const googleDeveloperKey = ""
+const googleDeveloperKey = "AIzaSyAZ01JvdUKpo2pKhQZ5syUYtj7entsUGgg"
 
 func getUserVCID(s *discordgo.Session, guildID, userID string) (string, error) {
 	guild, err := s.State.Guild(guildID)
@@ -316,16 +316,7 @@ var ( //Список комманд и их описание( чисто что�
 			}
 
 			sq.Add(song)
-			if len(sq.list) == 1 {
-
-				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Content: fmt.Sprintf("<:Youtube:1360579220878655579> Сейчас играет: %v", stringResult),
-					},
-				})
-
-			} else {
+			if sq.Running {
 				sq.Add(song)
 				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 					Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -334,24 +325,26 @@ var ( //Список комманд и их описание( чисто что�
 					},
 				})
 				return
-			}
 
-			vc, err := s.ChannelVoiceJoin(i.GuildID, vcid, false, true)
-			//vc, err := s.ChannelVoiceJoin((i.GuildID,)
-			if err != nil {
-				log.Printf("[!] Error joining channel %v", err)
-				return
-			}
+			} else {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: fmt.Sprintf("<:Youtube:1360579220878655579> Сейчас играет: %v", stringResult),
+					},
+				})
 
-			ff := exec.Command("ffmpeg",
-				"-i", "pipe:0",
-				"-f", "s16le",
-				"-ar", strconv.Itoa(FRAME_RATE),
-				"-ac", strconv.Itoa(CHANNELS),
-				"pipe:1",
-			)
+			}
 
 			if !sq.Running {
+				vc, err := s.ChannelVoiceJoin(i.GuildID, vcid, false, true)
+				//vc, err := s.ChannelVoiceJoin((i.GuildID,)
+				if err != nil {
+					log.Printf("[!] Error joining channel %v", err)
+					return
+				}
+
+				conn := NewConnection(vc)
 				sq.Running = true
 				go func() {
 					defer func() {
@@ -374,6 +367,13 @@ var ( //Список комманд и их описание( чисто что�
 							log.Println("[!] Error creatng yt-dlp pipe %v", err)
 							return
 						}
+						ff := exec.Command("ffmpeg",
+							"-i", "pipe:0",
+							"-f", "s16le",
+							"-ar", strconv.Itoa(FRAME_RATE),
+							"-ac", strconv.Itoa(CHANNELS),
+							"pipe:1",
+						)
 						ff.Stdin = ytOut
 
 						if err := yt.Start(); err != nil {
@@ -381,7 +381,6 @@ var ( //Список комманд и их описание( чисто что�
 							return
 						}
 
-						conn := NewConnection(vc)
 						//song := NewSong(ytVideoLink, stringResult, "1")
 						if err := conn.Play(ff); err != nil {
 							log.Println("[!] Playback error %v", err)
@@ -431,7 +430,7 @@ func YTSearch(query string, yts *youtube.Service) map[string]string {
 func main() {
 
 	log.Printf("[DEBUG] %v\n", runtime.GOOS)
-	discord, err := discordgo.New("Bot " + "OTgyMzA0NTU4NTIyOTU3OTE0.GTBxsR.fJiNLEWukBzhoZVyjJcol3aAmYtwwDv7lOH35Q")
+	discord, err := discordgo.New("Bot " + "")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -494,3 +493,4 @@ func main() {
 
 	log.Println("[-] Succesfully shutting down")
 }
+
